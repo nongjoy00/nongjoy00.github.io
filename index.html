@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manchuporn Thabthan | 3D Portfolio</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #090a0f;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    #webgl {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .overlay {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 24px 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: auto;
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(9,10,15,.75), transparent);
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 13px;
+      opacity: .8;
+      transition: .25s;
+    }
+
+    nav a:hover {
+      opacity: 1;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 120px 8vw;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero {
+      min-height: 100vh;
+    }
+
+    .hero-content {
+      max-width: 680px;
+    }
+
+    .eyebrow {
+      color: #aeb5ff;
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(54px, 9vw, 120px);
+      line-height: .9;
+      letter-spacing: -5px;
+      margin-bottom: 30px;
+    }
+
+    .hero p {
+      max-width: 520px;
+      color: #c4c6cf;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .scroll {
+      margin-top: 45px;
+      display: inline-block;
+      color: white;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 100px;
+      padding: 13px 22px;
+      text-decoration: none;
+      font-size: 13px;
+      pointer-events: auto;
+      transition: .3s;
+    }
+
+    .scroll:hover {
+      background: white;
+      color: #090a0f;
+    }
+
+    .panel {
+      max-width: 850px;
+      padding: 38px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(10,11,17,.62);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.25);
+    }
+
+    h2 {
+      font-size: clamp(36px, 5vw, 64px);
+      letter-spacing: -2px;
+      margin-bottom: 28px;
+    }
+
+    .about-text {
+      color: #c4c6cf;
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .about-text strong {
+      color: white;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .skill {
+      padding: 10px 15px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,.18);
+      font-size: 13px;
+      color: #dfe1ff;
+      background: rgba(255,255,255,.04);
+    }
+
+    .projects {
+      justify-content: flex-start;
+    }
+
+    .project-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .project-card {
+      min-height: 260px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 20px;
+      padding: 24px;
+      background: rgba(10,11,17,.55);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .project-card span {
+      color: #aeb5ff;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .project-card h3 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .project-card p {
+      color: #aaaebc;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    footer {
+      min-height: 45vh;
+      padding: 100px 8vw;
+      display: flex;
+      align-items: center;
+    }
+
+    .contact h2 {
+      margin-bottom: 12px;
+    }
+
+    .contact p {
+      color: #aeb0bb;
+      line-height: 1.7;
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 5;
+      font-size: 11px;
+      color: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 10px 14px;
+      border-radius: 100px;
+      background: rgba(0,0,0,.3);
+      backdrop-filter: blur(8px);
+    }
+
+    @media (max-width: 800px) {
+      nav {
+        padding: 20px 5vw;
+      }
+
+      nav .links {
+        display: none;
+      }
+
+      section {
+        padding: 100px 6vw;
+      }
+
+      h1 {
+        letter-spacing: -3px;
+      }
+
+      .panel {
+        padding: 26px;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card {
+        min-height: 190px;
+      }
+
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Three.js Canvas -->
+  <div id="webgl"></div>
+
+  <div class="overlay">
+
+    <nav>
+      <div class="logo">M / T</div>
+      <div class="links">
+        <a href="#home">Home</a>
+        <a href="#about">About Me</a>
+        <a href="#projects">Projects</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">3D Portfolio / Digital Media Design</div>
+
+        <h1>
+          Manchuporn<br>
+          Thabthan
+        </h1>
+
+        <p>
+          3D Artist & Digital Media Designer
+          interested in 3D modeling, animation,
+          visual design and digital media production.
+        </p>
+
+        <a class="scroll" href="#about">Explore Portfolio ↓</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="panel">
+        <div class="eyebrow">01 / About Me</div>
+
+        <h2>Hello!</h2>
+
+        <div class="about-text">
+          <p>
+            My name is <strong>Manchuporn Thabthan</strong>,
+            and I am 21 years old. I am currently studying
+            <strong>Digital Media Design</strong>.
+          </p>
+
+          <br>
+
+          <p>
+            I have experience using <strong>Blender</strong> and
+            <strong>Maya</strong> for 3D modeling and design.
+            I also have skills in <strong>video editing</strong>
+            and digital media production.
+          </p>
+
+          <br>
+
+          <p>
+            I am interested in <strong>3D, Animation, and Digital Media</strong>,
+            and I enjoy learning new techniques and improving my skills
+            through each project.
+          </p>
+        </div>
+
+        <div class="skills">
+          <div class="skill">Blender</div>
+          <div class="skill">Maya</div>
+          <div class="skill">3D Modeling</div>
+          <div class="skill">Animation</div>
+          <div class="skill">Video Editing</div>
+          <div class="skill">Digital Media</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="projects">
+      <div style="width:100%;">
+        <div class="eyebrow">02 / Selected Work</div>
+        <h2>Projects</h2>
+
+        <div class="project-grid">
+          <div class="project-card">
+            <span>3D / Modeling</span>
+            <h3>3D Modeling</h3>
+            <p>
+              Character, object and environment modeling
+              created with Blender and Maya.
+            </p>
+          </div>
+
+          <div class="project-card">
+            <span>Animation</span>
+            <h3>3D Animation</h3>
+            <p>
+              Animation projects exploring movement,
+              storytelling and visual communication.
+            </p>
+          </div>
+
+          <div class="project-card">
+            <span>Digital Media</span>
+            <h3>Media Production</h3>
+            <p>
+              Video editing and digital media projects
+              developed throughout my studies.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <footer>
+      <div class="contact">
+        <div class="eyebrow">03 / Contact</div>
+        <h2>Let's Create.</h2>
+        <p>
+          Thank you for visiting my portfolio.<br>
+          More projects and creative works coming soon.
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <div class="hint">Drag to rotate · Scroll to explore</div>
+
+  <!-- Three.js -->
+  <script type="module">
+    import * as THREE from
+      'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js';
+
+    import { OrbitControls } from
+      'https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/controls/OrbitControls.js';
+
+    // --------------------------------------------------
+    // Scene
+    // --------------------------------------------------
+
+    const container = document.getElementById('webgl');
+
+    const scene = new THREE.Scene();
+
+    scene.background = new THREE.Color(0x090a0f);
+
+    // --------------------------------------------------
+    // Camera
+    // --------------------------------------------------
+
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      100
+    );
+
+    camera.position.set(0, 0, 7);
+
+    // --------------------------------------------------
+    // Renderer
+    // --------------------------------------------------
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, 2)
+    );
+
+    renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    container.appendChild(renderer.domElement);
+
+    // --------------------------------------------------
+    // Lights
+    // --------------------------------------------------
+
+    const ambientLight = new THREE.AmbientLight(
+      0xffffff,
+      1.5
+    );
+
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(
+      0xffffff,
+      3
+    );
+
+    keyLight.position.set(4, 5, 6);
+    scene.add(keyLight);
+
+    const rimLight = new THREE.PointLight(
+      0x6677ff,
+      30,
+      15
+    );
+
+    rimLight.position.set(-4, 2, 3);
+    scene.add(rimLight);
+
+    // --------------------------------------------------
+    // 3D Object
+    // Replace this object with your own .glb model later.
+    // --------------------------------------------------
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const geometry = new THREE.IcosahedronGeometry(1.65, 2);
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x737dff,
+      roughness: 0.28,
+      metalness: 0.55,
+      wireframe: false
+    });
+
+    const object = new THREE.Mesh(
+      geometry,
+      material
+    );
+
+    group.add(object);
+
+    // Wireframe shell
+    const wireMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.12
+    });
+
+    const wire = new THREE.Mesh(
+      geometry,
+      wireMaterial
+    );
+
+    wire.scale.setScalar(1.02);
+    group.add(wire);
+
+    // Small floating particles
+    const particleGeometry =
+      new THREE.BufferGeometry();
+
+    const particleCount = 500;
+
+    const positions = new Float32Array(
+      particleCount * 3
+    );
+
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] =
+        (Math.random() - 0.5) * 14;
+
+      positions[i * 3 + 1] =
+        (Math.random() - 0.5) * 10;
+
+      positions[i * 3 + 2] =
+        (Math.random() - 0.5) * 10;
+    }
+
+    particleGeometry.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        positions,
+        3
+      )
+    );
+
+    const particleMaterial =
+      new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.025,
+        transparent: true,
+        opacity: 0.55
+      });
+
+    const particles = new THREE.Points(
+      particleGeometry,
+      particleMaterial
+    );
+
+    scene.add(particles);
+
+    // --------------------------------------------------
+    // Controls
+    // --------------------------------------------------
+
+    const controls = new OrbitControls(
+      camera,
+      renderer.domElement
+    );
+
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.minDistance = 4;
+    controls.maxDistance = 10;
+
+    // --------------------------------------------------
+    // Mouse interaction
+    // --------------------------------------------------
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        mouseX =
+          (event.clientX / window.innerWidth) * 2 - 1;
+
+        mouseY =
+          -(event.clientY / window.innerHeight) * 2 + 1;
+      }
+    );
+
+    // --------------------------------------------------
+    // Scroll
+    // --------------------------------------------------
+
+    let scrollY = 0;
+
+    window.addEventListener(
+      'scroll',
+      () => {
+        scrollY = window.scrollY;
+      }
+    );
+
+    // --------------------------------------------------
+    // Animation
+    // --------------------------------------------------
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+
+      requestAnimationFrame(animate);
+
+      const elapsed = clock.getElapsedTime();
+
+      // Object animation
+      object.rotation.x =
+        elapsed * 0.15 + mouseY * 0.2;
+
+      object.rotation.y =
+        elapsed * 0.25 + mouseX * 0.3;
+
+      wire.rotation.copy(object.rotation);
+
+      // Floating motion
+      group.position.y =
+        Math.sin(elapsed * 0.8) * 0.15;
+
+      // Particles
+      particles.rotation.y =
+        elapsed * 0.015;
+
+      // Camera movement according to scroll
+      const scrollProgress =
+        scrollY /
+        Math.max(
+          document.body.scrollHeight -
+          window.innerHeight,
+          1
+        );
+
+      camera.position.x +=
+        ((mouseX * 0.5) - camera.position.x) *
+        0.025;
+
+      camera.position.y +=
+        ((mouseY * 0.3) - camera.position.y) *
+        0.025;
+
+      camera.position.z =
+        7 + scrollProgress * 1.5;
+
+      controls.update();
+
+      renderer.render(
+        scene,
+        camera
+      );
+    }
+
+    animate();
+
+    // --------------------------------------------------
+    // Resize
+    // --------------------------------------------------
+
+    window.addEventListener(
+      'resize',
+      () => {
+
+        camera.aspect =
+          window.innerWidth /
+          window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+          window.innerWidth,
+          window.innerHeight
+        );
+
+        renderer.setPixelRatio(
+          Math.min(window.devicePixelRatio, 2)
+        );
+      }
+    );
+  </script>
+
+</body>
+</html>
