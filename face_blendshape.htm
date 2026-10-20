@@ -36,7 +36,7 @@
     scene.add(new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1));
     const model = await new GLTFLoader().loadAsync('https://nongjoy00.github.io/momo1.glb');
     
-    model.scene.scale.setScalar(0.5);
+    model.scene.scale.setScalar(2);
     mindar.addAnchor(1).group.add(model.scene);
     const meshes = [];
     model.scene.traverse(object => {
